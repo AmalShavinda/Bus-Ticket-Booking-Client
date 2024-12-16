@@ -6,6 +6,7 @@ import Login from "./pages/Login/Login";
 import AdminDashBoard from "./pages/Admin/AdminDashBoard/AdminDashBoard";
 import Home from "./pages/Client/Home/Home";
 import EmployeeDashBoard from "./pages/EmployeeDashBoard/EmployeeDashBoard";
+import BusList from "./pages/Client/BusList/BusList";
 
 const App: React.FC = () => {
   return (
@@ -14,6 +15,7 @@ const App: React.FC = () => {
         {/* Public route */}
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<Home />} />
+        <Route path="/searchedbuses" element={<BusList />} />
 
         {/* Protected route for admin dashboard */}
         <Route
