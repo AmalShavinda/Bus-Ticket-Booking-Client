@@ -1,18 +1,7 @@
-import { useState } from "react";
-import Select from "react-select";
+import useBooking from "../../hooks/useBooking";
 
 const ReservationSearch = () => {
-  const options = [
-    { value: "colombo-kandy", label: "Colombo to Kandy" },
-    { value: "galle-matara", label: "Galle to Matara" },
-    { value: "jaffna-colombo", label: "Jaffna to Colombo" },
-  ];
-  const [selectedOption, setSelectedOption] = useState(null);
-
-  const handleChange = (option: any) => {
-    setSelectedOption(option);
-    console.log("Selected:", option);
-  };
+  const { setStartPoint, setDestination, setDate, handleSearch } = useBooking();
 
   return (
     <div className="w-full">
@@ -22,7 +11,7 @@ const ReservationSearch = () => {
         </h2>
       </div>
       <div className="flex items-center gap-5 px-5 py-4 bg-[#266ea55a]">
-        <Select
+        {/* <Select
           options={options}
           value={selectedOption}
           onChange={handleChange}
@@ -37,9 +26,28 @@ const ReservationSearch = () => {
           placeholder="To"
           isClearable
           className="placeholder:uppercase text-start w-60 py-2"
+        /> */}
+        <input
+          type="text"
+          placeholder="from"
+          className="capitalize px-4 py-1.5 rounded-sm w-60"
+          onChange={(e) => setStartPoint(e.target.value)}
         />
-        <input type="date" className="uppercase px-4 py-1.5 rounded-sm w-60" />
-        <button className="px-8 py-2 bg-orange-600 rounded-sm text-sm font-bold text-white uppercase">
+        <input
+          type="text"
+          placeholder="To"
+          className="capitalize px-4 py-1.5 rounded-sm w-60"
+          onChange={(e) => setDestination(e.target.value)}
+        />
+        <input
+          type="date"
+          className="uppercase px-4 py-1.5 rounded-sm w-60"
+          onChange={(e) => setDate(e.target.value)}
+        />
+        <button
+          className="px-8 py-2 bg-orange-600 rounded-sm text-sm font-bold text-white uppercase"
+          onClick={handleSearch}
+        >
           Search
         </button>
       </div>

@@ -7,6 +7,7 @@ import AdminDashBoard from "./pages/Admin/AdminDashBoard/AdminDashBoard";
 import Home from "./pages/Client/Home/Home";
 import EmployeeDashBoard from "./pages/EmployeeDashBoard/EmployeeDashBoard";
 import BusList from "./pages/Client/BusList/BusList";
+import SeatsPage from "./pages/Client/Seats/SeatsPage";
 
 const App: React.FC = () => {
   return (
@@ -16,6 +17,7 @@ const App: React.FC = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<Home />} />
         <Route path="/searchedbuses" element={<BusList />} />
+        <Route path="/seats" element={<SeatsPage />} />
 
         {/* Protected route for admin dashboard */}
         <Route
