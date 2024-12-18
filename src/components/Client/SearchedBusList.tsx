@@ -1,47 +1,72 @@
-import { useEffect } from "react";
-import { ThunkDispatch } from "redux-thunk";
-import { RootState } from "../../redux/store";
-import { BusesActionTypes } from "../../redux/Buses/BusesReducer";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchSearchedBuses } from "../../redux/Buses/BusesAction";
-
-type AppDispatch = ThunkDispatch<RootState, unknown, BusesActionTypes>;
+import { GoTriangleRight } from "react-icons/go";
+import useBooking from "../../hooks/useBooking";
 
 const SearchedBusList = () => {
-  const dispatch: AppDispatch = useDispatch();
-  const { searchedBuses } = useSelector(
-    (state: RootState) => state.searchedBuses
-  );
+  const { removeSeconds, searchedBuses, handleBooking } = useBooking();
 
-  useEffect(() => {
-    dispatch(fetchSearchedBuses("matara", "colombo", "2024-12-16"));
-  }, [dispatch]);
-
-  console.log(searchedBuses);
   return (
-    <div>
-      <div>
-        {searchedBuses.data.map((item) => (
-          <div className=" flex items-center justify-center gap-4 mb-9">
-            {item.tripSchedules.map((trip: any) => (
-              <div className="flex flex-col items-center justify-center gap-2 bg-blue-500 px-8 py-3 mt-4">
-                <p>{item.busNumber}</p>
-
-                <p>{trip.tripDate.split("T")[0]}</p>
-                <p>{trip.arrivalTime.split("T")[1]}</p>
-                <p>{trip.tripDate.split("T")[0]}</p>
-                {/* <div>
+    <div className="px-10">
+      {searchedBuses.data.length > 0 ? (
+        <div>
+          {searchedBuses.data.map((item) => (
+            <div
+              className=" flex flex-col items-center justify-center gap-4 my-10"
+              key={item._id}
+            >
+              {item.tripSchedules.map((trip: any) => (
+                <div className="w-full" key={trip.tripId}>
+                  <div className="bg-blue-800 w-full h-10 rounded-t-lg"> </div>
+                  <div className="flex items-center justify-start gap-10 bg-white px-8 py-8">
+                    <div>
+                      <p className="text-xs tracking-wider">Departure</p>
+                      <p className="text-base font-bold">
+                        {removeSeconds(trip.departureTime.split("T")[1])}
+                      </p>
+                    </div>
+                    <div>
+                      <GoTriangleRight size={40} color="#FFD788" />
+                    </div>
+                    <div>
+                      <p className="text-xs tracking-wider">Arrival</p>
+                      <p className="text-base font-bold">
+                        {removeSeconds(trip.arrivalTime.split("T")[1])}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs tracking-wider">Date</p>
+                      <p className="text-base font-bold">
+                        {trip.tripDate.split("T")[0]}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs tracking-wider">Bus Number</p>
+                      <p className="text-base font-bold">{item.busNumber}</p>
+                    </div>
+                    <button
+                      className="bg-[#4BC0A4] text-base text-white font-semibold rounded-sm px-6 py-2"
+                      onClick={() => handleBooking(trip.tripId)}
+                    >
+                      Book Seats
+                    </button>
+                  </div>
+                  <div className="bg-[#323232] w-full h-10 rounded-b-lg"> </div>
+                  {/* <div>
                     {trip.reservedSeats.map((seat) => (
                       <div>
                         <div>{seat.seatNumber}</div>
                       </div>
                     ))}
                   </div> */}
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div>
+          <p className="text-lg font-bold text-center">No buses found</p>
+        </div>
+      )}
     </div>
   );
 };

@@ -96,7 +96,6 @@ const Login = () => {
               disabled={loading}
               className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md bg-[#F30E0A] shadow-sm text-sm font-bold text-white bg-secondaryColor focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 max-sm:text-xs"
             >
-              Sign in
               {loading ? "Signing in..." : "Sign in"}
             </button>
           </div>
