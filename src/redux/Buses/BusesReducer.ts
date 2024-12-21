@@ -23,6 +23,10 @@ interface BusesState {
   seats: {
     message: string | null;
     data: {
+      busId: string;
+      tripId: string;
+      routeId: string;
+      tripDate: string;
       price: number;
       seats: any[];
     };
@@ -40,6 +44,10 @@ const initialState: BusesState = {
   seats: {
     message: null,
     data: {
+      busId: "",
+      tripId: "",
+      routeId: "",
+      tripDate: "",
       price: 0,
       seats: [],
     },
@@ -73,6 +81,10 @@ interface FetchSeatsForTripSuccessAction {
   payload: {
     message: null;
     data: {
+      busId: "";
+      tripId: "";
+      routeId: "";
+      tripDate: "";
       price: 0;
       seats: any[];
     };
@@ -149,7 +161,14 @@ const busesReducer = (
         loading: false,
         seats: {
           message: action.payload.message,
-          data: action.payload.data,
+          data: {
+            busId: action.payload.data.busId,
+            tripId: action.payload.data.tripId,
+            routeId: action.payload.data.routeId,
+            tripDate: action.payload.data.tripDate,
+            price: action.payload.data.price,
+            seats: action.payload.data.seats,
+          },
         },
       };
     case FETCH_SEATS_FOR_TRIP_FAILURE:
@@ -174,6 +193,10 @@ const busesReducer = (
         seats: {
           message: null,
           data: {
+            busId: "",
+            tripId: "",
+            routeId: "",
+            tripDate: "",
             price: 0,
             seats: [],
           },

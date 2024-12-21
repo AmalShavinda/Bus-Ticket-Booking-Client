@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 import { RiSteering2Fill } from "react-icons/ri";
 import { FaArrowRightLong } from "react-icons/fa6";
+import { IoIosWarning } from "react-icons/io";
 import useBooking from "../../hooks/useBooking";
+import { fetchSeatsForTrip } from "../../redux/Buses/BusesAction";
+import { useParams } from "react-router-dom";
 
 const Seats = () => {
   const {
+    dispatch,
     seats,
     selectedSeats,
     handleSeatSelection,
@@ -12,7 +16,16 @@ const Seats = () => {
     setPrice,
     isFormOpen,
     setIsFormOpen,
+    paymentOption,
+    setPaymentOption,
+    handlebooking,
   } = useBooking();
+
+  const { tripId } = useParams<{ tripId: any }>();
+
+  useEffect(() => {
+    dispatch(fetchSeatsForTrip(tripId));
+  }, [dispatch, tripId]);
 
   const totalSeats = seats?.data?.seats || [];
   const backSeats = totalSeats.slice(-6); // Last 6 seats are the back row
@@ -171,11 +184,13 @@ const Seats = () => {
             }}
           >
             <div
-              className="w-[400px] h-[600px] bg-white shadow-lg overflow-y-auto rounded-md px-8 py-6"
+              className="w-[400px] h-[600px] bg-white shadow-lg overflow-y-auto rounded-md px-8 py-6 relative"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex gap-5 items-center">
-                <p className="text-lg font-bold tracking-wide">Your booking details</p>
+                <p className="text-lg font-bold tracking-wide">
+                  Your booking details
+                </p>
               </div>
               <div className="mt-4">
                 <p className="text-sm font-medium">Total Price</p>
@@ -190,27 +205,111 @@ const Seats = () => {
                 </div>
               </div>
               <div className="mt-6">
-                <p className="text-lg text-gray-600 font-semibold tracking-wide">Payments</p>
+                <p className="text-lg text-gray-600 font-semibold tracking-wide">
+                  Payments
+                </p>
               </div>
               <div className="mt-3">
-                <p className="text-sm font-medium tracking-wide">Pay at the bus</p>
-                <p className="text-sm font-medium tracking-wide">Pay Now</p>
+                {/* Payment Options */}
+                <div className="flex items-center gap-5">
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="payment"
+                      value="payNow"
+                      checked={paymentOption === "payNow"}
+                      onChange={(e) => setPaymentOption(e.target.value)}
+                      className="mr-2"
+                    />
+                    <span className="text-sm font-medium tracking-wide">
+                      Pay Now
+                    </span>
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="payment"
+                      value="payAtBus"
+                      checked={paymentOption === "payAtBus"}
+                      onChange={(e) => setPaymentOption(e.target.value)}
+                      className="mr-2"
+                    />
+                    <span className="text-sm font-medium tracking-wide">
+                      Pay at the Bus
+                    </span>
+                  </label>
+                </div>
               </div>
-              <div className="mt-3">
-                <p className="text-sm font-medium tracking-wide">Card Holder Name</p>
-                <input type="text" name="" id="" className="px-3 py-2 text-sm font-medium border rounded-md w-full mt-2" placeholder="Card holder name"/>
-              </div>
-              <div className="mt-3">
-                <p className="text-sm font-medium tracking-wide">Card Number</p>
-                <input type="text" name="" id="" className="px-3 py-2 text-sm font-medium border rounded-md w-full mt-2" placeholder="Card holder name"/>
-              </div>
-              <div className="mt-3">
-                <p className="text-sm font-medium tracking-wide">Card Holder Name</p>
-                <input type="text" name="" id="" className="px-3 py-2 text-sm font-medium border rounded-md w-full mt-2" placeholder="Card Number"/>
-              </div>
+              {paymentOption === "payNow" ? (
+                <div className="text-[#323232]">
+                  <div className="mt-5">
+                    <p className="text-sm font-medium tracking-wide">
+                      Card Holder Name{" "}
+                      <span className="text-sm text-red-600 font-bold">*</span>
+                    </p>
+                    <input
+                      type="text"
+                      name=""
+                      id=""
+                      className="px-3 py-2 text-sm font-medium border rounded-md w-full mt-2"
+                      placeholder="Card Holder Name"
+                    />
+                  </div>
+                  <div className="mt-3">
+                    <p className="text-sm font-medium tracking-wide">
+                      Card Number{" "}
+                      <span className="text-sm text-red-600 font-bold">*</span>
+                    </p>
+                    <input
+                      type="text"
+                      name=""
+                      id=""
+                      className="px-3 py-2 text-sm font-medium border rounded-md w-full mt-2"
+                      placeholder="Card Number"
+                    />
+                  </div>
+                  <div className="flex items-center gap-6">
+                    <div className="mt-3">
+                      <p className="text-sm font-medium tracking-wide">
+                        Expire Date
+                      </p>
+                      <input
+                        type="date"
+                        name=""
+                        id=""
+                        className="px-3 py-2 text-sm font-medium border rounded-md w-40 mt-2 uppercase"
+                        placeholder="Expire Date"
+                      />
+                    </div>
+                    <div className="mt-3">
+                      <p className="text-sm font-medium tracking-wide">CVV</p>
+                      <input
+                        type="text"
+                        name=""
+                        id=""
+                        className="px-3 py-2 text-sm font-medium border rounded-md w-28 mt-2 uppercase"
+                        placeholder="CVV"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="mt-8">
+                  <div className="flex items-center gap-3">
+                    <IoIosWarning color="#ea580c" size={20} />
+                    <p className="text-sm text-gray-600">Warning</p>
+                  </div>
 
-              <div className="flex w-full justify-center mt-6">
-                <button className="px-10 py-2 bg-orange-600 rounded-lg text-sm text-white font-bold">
+                  <p className="text-sm text-gray-600">
+                    Your booking is cancelled if you are not present on time.
+                  </p>
+                </div>
+              )}
+              <div className="absolute right-10 bottom-8">
+                <button
+                  className="px-10 py-2 bg-orange-600 rounded-lg text-sm text-white font-bold"
+                  onClick={() => handlebooking()}
+                >
                   Book
                 </button>
               </div>
