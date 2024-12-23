@@ -4,6 +4,9 @@ import {
   BusesActionTypes,
   CLEAR_SEARCHED_BUSES,
   CLEAR_SEATS_FOR_TRIP,
+  FETCH_ALL_BUSES_FAILURE,
+  FETCH_ALL_BUSES_REQUEST,
+  FETCH_ALL_BUSES_SUCCESS,
   FETCH_SEARCHED_BUSES_FAILURE,
   FETCH_SEARCHED_BUSES_REQUEST,
   FETCH_SEARCHED_BUSES_SUCCESS,
@@ -50,6 +53,38 @@ export const fetchSearchedBuses = (
     } catch (error: any) {
       dispatch({
         type: FETCH_SEARCHED_BUSES_FAILURE,
+        payload: error.message,
+      });
+    }
+  };
+};
+export const fetchAlledBuses = () => {
+  return async (dispatch: Dispatch<BusesActionTypes>) => {
+    dispatch({ type: FETCH_ALL_BUSES_REQUEST });
+    const token = Cookies.get("access_token");
+    if (!token) {
+      dispatch({
+        type: FETCH_ALL_BUSES_FAILURE,
+        payload: "Access token not found",
+      });
+      return;
+    }
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/buses`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      dispatch({
+        type: FETCH_ALL_BUSES_SUCCESS,
+        payload: response.data,
+      });
+    } catch (error: any) {
+      dispatch({
+        type: FETCH_ALL_BUSES_FAILURE,
         payload: error.message,
       });
     }

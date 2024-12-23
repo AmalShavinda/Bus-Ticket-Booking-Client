@@ -3,11 +3,13 @@ import { ThunkAction, thunk } from "redux-thunk";
 import authReducer from "./Auth/AuthReducer";
 import employeesReducer from "./Employees/EmployeesReducer";
 import busesReducer from "./Buses/BusesReducer";
+import usersReducer from "./Users/UserReducer";
 
 const rootReducer = combineReducers({
   auth: authReducer,
   employees: employeesReducer,
-  searchedBuses: busesReducer,
+  buses: busesReducer,
+  users: usersReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

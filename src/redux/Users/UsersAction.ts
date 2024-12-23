@@ -1,31 +1,34 @@
 import { Dispatch } from "react";
 import {
-  ADD_EMPLOYEE_FAILURE,
-  ADD_EMPLOYEE_REQUEST,
-  ADD_EMPLOYEE_SUCCESS,
-  EmployeesActionTypes,
-  FETCH_EMPLOYEES_FAILURE,
-  FETCH_EMPLOYEES_REQUEST,
-  FETCH_EMPLOYEES_SUCCESS,
-} from "./EmployeesReducer";
+  ADD_USER_FAILURE,
+  ADD_USER_REQUEST,
+  ADD_USER_SUCCESS,
+  DELETE_USER_FAILURE,
+  DELETE_USER_REQUEST,
+  DELETE_USER_SUCCESS,
+  FETCH_USERS_FAILURE,
+  FETCH_USERS_REQUEST,
+  FETCH_USERS_SUCCESS,
+  UsersActionTypes,
+} from "./UserReducer";
 import axios from "axios";
 import Cookies from "js-cookie";
 
-export const fetchEmployees = () => {
-  return async (dispatch: Dispatch<EmployeesActionTypes>) => {
-    dispatch({ type: FETCH_EMPLOYEES_REQUEST });
+export const fetchUsers = () => {
+  return async (dispatch: Dispatch<UsersActionTypes>) => {
+    dispatch({ type: FETCH_USERS_REQUEST });
     const token = Cookies.get("access_token");
     console.log("Access Token:", token);
     if (!token) {
       dispatch({
-        type: FETCH_EMPLOYEES_FAILURE,
+        type: FETCH_USERS_FAILURE,
         payload: "Access token not found",
       });
       return;
     }
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/employees`,
+        `${import.meta.env.VITE_BACKEND_URL}/users`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -33,27 +36,27 @@ export const fetchEmployees = () => {
         }
       );
       dispatch({
-        type: FETCH_EMPLOYEES_SUCCESS,
+        type: FETCH_USERS_SUCCESS,
         payload: response.data,
       });
     } catch (error: any) {
       dispatch({
-        type: FETCH_EMPLOYEES_FAILURE,
+        type: FETCH_USERS_FAILURE,
         payload: error.message,
       });
     }
   };
 };
 
-export const createEmployee =
-  (empData: any) => async (dispatch: Dispatch<EmployeesActionTypes>) => {
-    dispatch({ type: ADD_EMPLOYEE_REQUEST });
+export const createUser =
+  (userData: any) => async (dispatch: Dispatch<UsersActionTypes>) => {
+    dispatch({ type: ADD_USER_REQUEST });
     const token = Cookies.get("access_token");
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/employees`,
-        empData,
+        `${import.meta.env.VITE_BACKEND_URL}/auth/register`,
+        userData,
         {
           headers: {
             "Content-Type": "application/json",
@@ -64,25 +67,25 @@ export const createEmployee =
       );
 
       if (response.status !== 200 && response.status !== 201) {
-        throw new Error("Failed to add employee");
+        throw new Error("Failed to add user");
       }
 
-      dispatch({ type: ADD_EMPLOYEE_SUCCESS });
+      dispatch({ type: ADD_USER_SUCCESS });
     } catch (error: any) {
-      dispatch({ type: ADD_EMPLOYEE_FAILURE, payload: error.message });
+      dispatch({ type: ADD_USER_FAILURE, payload: error.message });
     }
   };
 
-export const updateEmployee =
-  (id: string, empData: any) =>
-  async (dispatch: Dispatch<EmployeesActionTypes>) => {
-    dispatch({ type: ADD_EMPLOYEE_REQUEST });
+export const updateUser =
+  (id: string, userData: any) =>
+  async (dispatch: Dispatch<UsersActionTypes>) => {
+    dispatch({ type: ADD_USER_REQUEST });
     const token = Cookies.get("access_token");
 
     try {
       const response = await axios.put(
-        `${import.meta.env.VITE_BACKEND_URL}/employees/${id}`,
-        empData,
+        `${import.meta.env.VITE_BACKEND_URL}/users/${id}`,
+        userData,
         {
           headers: {
             "Content-Type": "application/json",
@@ -93,23 +96,23 @@ export const updateEmployee =
       );
 
       if (response.status !== 200 && response.status !== 201) {
-        throw new Error("Failed to update employee");
+        throw new Error("Failed to update user");
       }
 
-      dispatch({ type: ADD_EMPLOYEE_SUCCESS });
+      dispatch({ type: ADD_USER_SUCCESS });
     } catch (error: any) {
-      dispatch({ type: ADD_EMPLOYEE_FAILURE, payload: error.message });
+      dispatch({ type: ADD_USER_FAILURE, payload: error.message });
     }
   };
 
-export const deleteEmployee =
-  (id: string) => async (dispatch: Dispatch<EmployeesActionTypes>) => {
-    dispatch({ type: ADD_EMPLOYEE_REQUEST });
+export const deleteUser =
+  (id: string) => async (dispatch: Dispatch<UsersActionTypes>) => {
+    dispatch({ type: DELETE_USER_REQUEST });
     const token = Cookies.get("access_token");
 
     try {
       const response = await axios.delete(
-        `${import.meta.env.VITE_BACKEND_URL}/employees/${id}`,
+        `${import.meta.env.VITE_BACKEND_URL}/users/${id}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -123,8 +126,8 @@ export const deleteEmployee =
         throw new Error("Failed to update employee");
       }
 
-      dispatch({ type: ADD_EMPLOYEE_SUCCESS });
+      dispatch({ type: DELETE_USER_SUCCESS });
     } catch (error: any) {
-      dispatch({ type: ADD_EMPLOYEE_FAILURE, payload: error.message });
+      dispatch({ type: DELETE_USER_FAILURE, payload: error.message });
     }
   };

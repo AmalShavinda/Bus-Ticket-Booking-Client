@@ -4,7 +4,6 @@ import { RootState } from "../redux/store";
 import { BusesActionTypes } from "../redux/Buses/BusesReducer";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  addSeatbooking,
   clearSearchedBuses,
   clearSeatsForTrip,
   fetchSearchedBuses,
@@ -16,30 +15,16 @@ type AppDispatch = ThunkDispatch<RootState, unknown, BusesActionTypes>;
 
 const useBooking = () => {
   const dispatch: AppDispatch = useDispatch();
-  const { searchedBuses } = useSelector(
-    (state: RootState) => state.searchedBuses
-  );
-  const { seats } = useSelector((state: RootState) => state.searchedBuses);
+  const { searchedBuses } = useSelector((state: RootState) => state.buses);
+  const { seats } = useSelector((state: RootState) => state.buses);
   const navigate = useNavigate();
   const [startPoint, setStartPoint] = useState("");
   const [destination, setDestination] = useState("");
   const [date, setDate] = useState("");
   const [selectedSeats, setSelectedSeats] = useState<number[]>([]);
-  const [price, setPrice] = useState(0);
+
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [paymentOption, setPaymentOption] = useState<string>("payNow");
-  const [bookingData, setBookingData] = useState({
-    busId: "",
-    routeId: "",
-    username: "",
-    seats: {},
-    tripDate: "",
-    paymentDetails: {
-      paymentMethod: "",
-      transactionId: "",
-      amount: 0,
-    },
-  });
 
   useEffect(() => {
     dispatch(fetchSeatsForTrip(seats.data.tripId));
@@ -99,23 +84,6 @@ const useBooking = () => {
     });
   };
 
-  const handlebooking = async () => {
-    setBookingData({
-      busId: seats.data.busId,
-      routeId: seats.data.routeId,
-      username: "",
-      seats: selectedSeats,
-      tripDate: seats.data.tripDate,
-      paymentDetails: {
-        paymentMethod: "Debit Card",
-        transactionId: "",
-        amount: price,
-      },
-    });
-    await dispatch(addSeatbooking(bookingData));
-    setIsFormOpen(false);
-  };
-
   return {
     dispatch,
     startPoint,
@@ -129,14 +97,12 @@ const useBooking = () => {
     handleSelectingTrip,
     seats,
     selectedSeats,
+    setSelectedSeats,
     handleSeatSelection,
-    price,
-    setPrice,
     isFormOpen,
     setIsFormOpen,
     paymentOption,
     setPaymentOption,
-    handlebooking,
   };
 };
 
