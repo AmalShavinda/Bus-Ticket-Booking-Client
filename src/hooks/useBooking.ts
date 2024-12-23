@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ThunkDispatch } from "redux-thunk";
 import { RootState } from "../redux/store";
 import { BusesActionTypes } from "../redux/Buses/BusesReducer";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  addSeatbooking,
   clearSearchedBuses,
   clearSeatsForTrip,
   fetchSearchedBuses,
@@ -23,9 +24,26 @@ const useBooking = () => {
   const [startPoint, setStartPoint] = useState("");
   const [destination, setDestination] = useState("");
   const [date, setDate] = useState("");
-  const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
+  const [selectedSeats, setSelectedSeats] = useState<number[]>([]);
   const [price, setPrice] = useState(0);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [paymentOption, setPaymentOption] = useState<string>("payNow");
+  const [bookingData, setBookingData] = useState({
+    busId: "",
+    routeId: "",
+    username: "",
+    seats: {},
+    tripDate: "",
+    paymentDetails: {
+      paymentMethod: "",
+      transactionId: "",
+      amount: 0,
+    },
+  });
+
+  useEffect(() => {
+    dispatch(fetchSeatsForTrip(seats.data.tripId));
+  }, [dispatch]);
 
   console.log(searchedBuses);
 
@@ -47,21 +65,23 @@ const useBooking = () => {
     try {
       // Await the dispatch if it returns a promise
       await dispatch(fetchSearchedBuses(startPoint, destination, date));
-      navigate("/searchedbuses");
+      navigate(
+        `/searchedbuses/startpoint/${startPoint}/destination/${destination}/date/${date}`
+      );
     } catch (error) {
       console.error("Error fetching searched buses:", error);
       alert("Failed to fetch buses. Please try again.");
     }
   };
 
-  const handleBooking = async (tripId: string) => {
+  const handleSelectingTrip = async (tripId: string) => {
     if (!tripId) {
       alert("Please select a trip");
       return;
     }
     dispatch(clearSeatsForTrip);
     await dispatch(fetchSeatsForTrip(tripId));
-    navigate("/seats");
+    navigate(`/seats/tripId/${tripId}`);
   };
 
   // Handle seat selection
@@ -79,7 +99,25 @@ const useBooking = () => {
     });
   };
 
+  const handlebooking = async () => {
+    setBookingData({
+      busId: seats.data.busId,
+      routeId: seats.data.routeId,
+      username: "",
+      seats: selectedSeats,
+      tripDate: seats.data.tripDate,
+      paymentDetails: {
+        paymentMethod: "Debit Card",
+        transactionId: "",
+        amount: price,
+      },
+    });
+    await dispatch(addSeatbooking(bookingData));
+    setIsFormOpen(false);
+  };
+
   return {
+    dispatch,
     startPoint,
     setStartPoint,
     destination,
@@ -88,7 +126,7 @@ const useBooking = () => {
     setDate,
     searchedBuses,
     handleSearch,
-    handleBooking,
+    handleSelectingTrip,
     seats,
     selectedSeats,
     handleSeatSelection,
@@ -96,6 +134,9 @@ const useBooking = () => {
     setPrice,
     isFormOpen,
     setIsFormOpen,
+    paymentOption,
+    setPaymentOption,
+    handlebooking,
   };
 };
 

@@ -1,8 +1,22 @@
 import { GoTriangleRight } from "react-icons/go";
 import useBooking from "../../hooks/useBooking";
+import { useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { fetchSearchedBuses } from "../../redux/Buses/BusesAction";
 
 const SearchedBusList = () => {
-  const { removeSeconds, searchedBuses, handleBooking } = useBooking();
+  const { removeSeconds, searchedBuses, handleSelectingTrip, dispatch } =
+    useBooking();
+
+  const { startPoint, destination, date } = useParams<{
+    startPoint: any;
+    destination: any;
+    date: any;
+  }>();
+
+  useEffect(() => {
+    dispatch(fetchSearchedBuses(startPoint, destination, date));
+  }, [dispatch]);
 
   return (
     <div className="px-10">
@@ -44,7 +58,7 @@ const SearchedBusList = () => {
                     </div>
                     <button
                       className="bg-[#4BC0A4] text-base text-white font-semibold rounded-sm px-6 py-2"
-                      onClick={() => handleBooking(trip.tripId)}
+                      onClick={() => handleSelectingTrip(trip.tripId)}
                     >
                       Book Seats
                     </button>

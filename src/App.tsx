@@ -16,8 +16,11 @@ const App: React.FC = () => {
         {/* Public route */}
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<Home />} />
-        <Route path="/searchedbuses" element={<BusList />} />
-        <Route path="/seats" element={<SeatsPage />} />
+        <Route
+          path="/searchedbuses/startPoint/:startPoint/destination/:destination/date/:date"
+          element={<BusList />}
+        />
+        <Route path="/seats/tripId/:tripId" element={<SeatsPage />} />
 
         {/* Protected route for admin dashboard */}
         <Route
