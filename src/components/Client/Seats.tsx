@@ -3,7 +3,10 @@ import { RiSteering2Fill } from "react-icons/ri";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { IoIosWarning } from "react-icons/io";
 import useBooking from "../../hooks/useBooking";
-import { fetchSeatsForTrip } from "../../redux/Buses/BusesAction";
+import {
+  addSeatbooking,
+  fetchSeatsForTrip,
+} from "../../redux/Buses/BusesAction";
 import { useParams } from "react-router-dom";
 
 const Seats = () => {
@@ -11,21 +14,49 @@ const Seats = () => {
     dispatch,
     seats,
     selectedSeats,
+    setSelectedSeats,
     handleSeatSelection,
-    price,
-    setPrice,
     isFormOpen,
     setIsFormOpen,
     paymentOption,
     setPaymentOption,
-    handlebooking,
   } = useBooking();
 
   const { tripId } = useParams<{ tripId: any }>();
+  const [price, setPrice] = useState(0);
+  const [bookingData, setBookingData] = useState({
+    busId: "",
+    routeId: "",
+    tripId: "",
+    username: "",
+    seats: {},
+    tripDate: "",
+    paymentDetails: {
+      paymentMethod: "",
+      transactionId: "",
+      amount: 0,
+    },
+  });
 
   useEffect(() => {
     dispatch(fetchSeatsForTrip(tripId));
   }, [dispatch, tripId]);
+
+  useEffect(() => {
+    if (selectedSeats.length > 0 && seats?.data?.price) {
+      const updatedPrice = selectedSeats.length * seats.data.price;
+      setPrice(updatedPrice);
+    } else {
+      setPrice(0);
+    }
+  }, [selectedSeats, seats]);
+
+  useEffect(() => {
+    handleBookingData();
+  }, [dispatch, selectedSeats, price]);
+
+  console.log(seats);
+  console.log("Booking Data ", bookingData);
 
   const totalSeats = seats?.data?.seats || [];
   const backSeats = totalSeats.slice(-6); // Last 6 seats are the back row
@@ -60,16 +91,34 @@ const Seats = () => {
   //   });
   // };
 
-  useEffect(() => {
-    setPrice(
-      selectedSeats.length > 0 ? selectedSeats.length * seats.data.price : 0
-    );
-  });
-
   const handleProceed = () => {
     if (selectedSeats.length > 0) {
       setIsFormOpen(true);
     }
+  };
+
+  const handleBookingData = async () => {
+    await setBookingData({
+      busId: seats.data.busId,
+      routeId: seats.data.routeId,
+      tripId: seats.data.tripId,
+      username: "shavinda",
+      seats: selectedSeats,
+      tripDate: seats.data.tripDate,
+      paymentDetails: {
+        paymentMethod: "Debit Card",
+        transactionId: "tx123456",
+        amount: price,
+      },
+    });
+  };
+
+  const handlebooking = async () => {
+    await dispatch(addSeatbooking(bookingData));
+    setIsFormOpen(false);
+    dispatch(fetchSeatsForTrip(tripId));
+    setPrice(0);
+    setSelectedSeats([]);
   };
 
   return (

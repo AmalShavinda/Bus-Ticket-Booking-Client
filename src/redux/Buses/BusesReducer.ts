@@ -1,6 +1,9 @@
 export const FETCH_SEARCHED_BUSES_REQUEST = "FETCh_SEARCHED_BUSES_REQUEST";
 export const FETCH_SEARCHED_BUSES_SUCCESS = "FETCh_SEARCHED_BUSES_SUCCESS";
 export const FETCH_SEARCHED_BUSES_FAILURE = "FETCh_SEARCHED_BUSES_FAILURE";
+export const FETCH_ALL_BUSES_REQUEST = "FETCh_ALL_BUSES_REQUEST";
+export const FETCH_ALL_BUSES_SUCCESS = "FETCh_ALL_BUSES_SUCCESS";
+export const FETCH_ALL_BUSES_FAILURE = "FETCh_ALL_BUSES_FAILURE";
 export const FETCH_SEATS_FOR_TRIP_REQUEST = "FETCh_SEATS_FOR_TRIP_REQUEST";
 export const FETCH_SEATS_FOR_TRIP_SUCCESS = "FETCh_SEATS_FOR_TRIP_SUCCESS";
 export const FETCH_SEATS_FOR_TRIP_FAILURE = "FETCh_SEATS_FOR_TRIP_FAILURE";
@@ -31,6 +34,7 @@ interface BusesState {
       seats: any[];
     };
   };
+  buses: any[];
   postSuccess: boolean;
 }
 
@@ -52,6 +56,7 @@ const initialState: BusesState = {
       seats: [],
     },
   },
+  buses: [],
   postSuccess: false,
 };
 
@@ -69,6 +74,20 @@ interface FetchSearchedBusesSuccessAction {
 
 interface FetchSearchedBusesFailureAction {
   type: typeof FETCH_SEARCHED_BUSES_FAILURE;
+  payload: string;
+}
+
+interface FetchAllBusesRequestAction {
+  type: typeof FETCH_ALL_BUSES_REQUEST;
+}
+
+interface FetchAllBusesSuccessAction {
+  type: typeof FETCH_ALL_BUSES_SUCCESS;
+  payload: any[];
+}
+
+interface FetchAllBusesFailureAction {
+  type: typeof FETCH_ALL_BUSES_FAILURE;
   payload: string;
 }
 
@@ -121,6 +140,9 @@ export type BusesActionTypes =
   | FetchSearchedBusesRequestAction
   | FetchSearchedBusesSuccessAction
   | FetchSearchedBusesFailureAction
+  | FetchAllBusesRequestAction
+  | FetchAllBusesSuccessAction
+  | FetchAllBusesFailureAction
   | FetchSeatsForTripRequestAction
   | FetchSeatsForTripSuccessAction
   | FetchSeatsForTripFailureAction
@@ -147,6 +169,21 @@ const busesReducer = (
         },
       };
     case FETCH_SEARCHED_BUSES_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+
+    case FETCH_ALL_BUSES_REQUEST:
+      return { ...state, loading: true };
+    case FETCH_ALL_BUSES_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        buses: action.payload,
+      };
+    case FETCH_ALL_BUSES_FAILURE:
       return {
         ...state,
         loading: false,
