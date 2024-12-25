@@ -4,12 +4,16 @@ import authReducer from "./Auth/AuthReducer";
 import employeesReducer from "./Employees/EmployeesReducer";
 import busesReducer from "./Buses/BusesReducer";
 import usersReducer from "./Users/UserReducer";
+import bookingsReducer from "./Bookings/BookingReducer";
+import routesReducer from "./Route/RouteReducer";
 
 const rootReducer = combineReducers({
   auth: authReducer,
   employees: employeesReducer,
   buses: busesReducer,
   users: usersReducer,
+  bookings: bookingsReducer,
+  routes: routesReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

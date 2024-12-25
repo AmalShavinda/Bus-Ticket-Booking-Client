@@ -37,22 +37,22 @@ const SideBar: React.FC<SideBarProps> = ({ setSelectedPage }) => {
         Employees
       </button>
       <button
-        onClick={() => setSelectedPage("employees")}
+        onClick={() => setSelectedPage("buses")}
         className="p-4 text-left hover:bg-gray-700 focus:outline-none"
       >
-        Train History
+        Buses
       </button>
       <button
-        onClick={() => setSelectedPage("trainRoutes")}
+        onClick={() => setSelectedPage("bookings")}
         className="p-4 text-left hover:bg-gray-700 focus:outline-none"
       >
-        Train Routes
+        Bookings
       </button>
       <button
-        onClick={() => setSelectedPage("engine")}
+        onClick={() => setSelectedPage("routes")}
         className="p-4 text-left hover:bg-gray-700 focus:outline-none"
       >
-        Engines
+        Routes
       </button>
       <div className="space-y-4 px-4 absolute bottom-8">
         <div className=" flex items-center gap-3">

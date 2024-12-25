@@ -13,6 +13,12 @@ export const POST_BOOKING_SEATS_FOR_TRIP_SUCCESS =
   "POST_BOOKING_SEATS_FOR_TRIP_SUCCESS";
 export const POST_BOOKING_SEATS_FOR_TRIP_FAILURE =
   "POST_BOOKING_SEATS_FOR_TRIP_FAILURE";
+export const ADD_BUSES_REQUEST = "ADD_BUSES_REQUEST";
+export const ADD_BUSES_SUCCESS = "ADD_BUSES_SUCCESS";
+export const ADD_BUSES_FAILURE = "ADD_BUSES_FAILURE";
+export const DELETE_BUSES_REQUEST = "DELETE_BUSES_REQUEST";
+export const DELETE_BUSES_SUCCESS = "DELETE_BUSES_SUCCESS";
+export const DELETE_BUSES_FAILURE = "DELETE_BUSES_FAILURE";
 export const CLEAR_SEARCHED_BUSES = "CLEAR_SEARCHED_BUSES";
 export const CLEAR_SEATS_FOR_TRIP = "CLEAR_SEATS_FOR_TRIP";
 
@@ -136,6 +142,32 @@ interface ClearSeatsForTrip {
   type: typeof CLEAR_SEATS_FOR_TRIP;
 }
 
+interface AddBusesRequestAction {
+  type: typeof ADD_BUSES_REQUEST;
+}
+
+interface AddBusesSuccessAction {
+  type: typeof ADD_BUSES_SUCCESS;
+}
+
+interface AddBusesFailureAction {
+  type: typeof ADD_BUSES_FAILURE;
+  payload: string;
+}
+
+interface DeleteBusesRequestAction {
+  type: typeof DELETE_BUSES_REQUEST;
+}
+
+interface DeleteBusesSuccessAction {
+  type: typeof DELETE_BUSES_SUCCESS;
+}
+
+interface DeleteBusesFailureAction {
+  type: typeof DELETE_BUSES_FAILURE;
+  payload: string;
+}
+
 export type BusesActionTypes =
   | FetchSearchedBusesRequestAction
   | FetchSearchedBusesSuccessAction
@@ -150,7 +182,13 @@ export type BusesActionTypes =
   | ClearSeatsForTrip
   | PostBookingSeatsForTripRequestAction
   | PostBookingSeatsForTripSuccessAction
-  | PostBookingSeatsForTripFailureAction;
+  | PostBookingSeatsForTripFailureAction
+  | AddBusesRequestAction
+  | AddBusesSuccessAction
+  | AddBusesFailureAction
+  | DeleteBusesRequestAction
+  | DeleteBusesSuccessAction
+  | DeleteBusesFailureAction;
 
 const busesReducer = (
   state = initialState,
@@ -254,6 +292,36 @@ const busesReducer = (
         loading: false,
         error: action.payload,
         postSuccess: false,
+      };
+
+    case ADD_BUSES_REQUEST:
+      return { ...state, loading: true, error: null, postSuccess: true };
+    case ADD_BUSES_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        postSuccess: false,
+      };
+    case ADD_BUSES_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+        postSuccess: false,
+      };
+
+    case DELETE_BUSES_REQUEST:
+      return { ...state, loading: true, error: null };
+    case DELETE_BUSES_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+      };
+    case DELETE_BUSES_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
       };
 
     default:

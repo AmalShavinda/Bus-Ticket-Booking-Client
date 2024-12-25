@@ -1,94 +1,98 @@
 import { ThunkDispatch } from "redux-thunk";
 import { RootState } from "../../redux/store";
-import { UsersActionTypes } from "../../redux/Users/UserReducer";
+import { RoutesActionTypes } from "../../redux/Route/RouteReducer";
 import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import {
+  createRoute,
+  deleteRoute,
+  fetchRoutes,
+  updateRoute,
+} from "../../redux/Route/RouteAction";
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { useEffect, useState } from "react";
 import NoDataFoundImg from "../../assets/no-data-found.png";
-import {
-  createUser,
-  deleteUser,
-  fetchUsers,
-  updateUser,
-} from "../../redux/Users/UsersAction";
+import { FaCirclePlus } from "react-icons/fa6";
 
-type AppDispatch = ThunkDispatch<RootState, unknown, UsersActionTypes>;
+type AppDispatch = ThunkDispatch<RootState, unknown, RoutesActionTypes>;
 
-const Users = () => {
+const Route = () => {
   const dispatch: AppDispatch = useDispatch();
-  const { users, loading } = useSelector((state: RootState) => state.users);
+  const { routes, loading } = useSelector((state: RootState) => state.routes);
+
+  useEffect(() => {
+    dispatch(fetchRoutes());
+  }, [dispatch]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [editingUserId, setEditingUserId] = useState<string | null>(null);
-  const [password, setPassword] = useState("");
-  const [newUser, setNewUser] = useState({
-    username: "",
-    firstname: "",
-    email: "",
-    isAdmin: "",
+  const [editingRouteId, setEditingRouteId] = useState<string | null>(null);
+  const [newRoute, setNewRoute] = useState({
+    startPoint: { name: "" },
+    endDestination: { name: "" },
+    subStations: [{ name: "" }],
   });
 
-  useEffect(() => {
-    dispatch(fetchUsers());
-  }, [dispatch]);
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    if (name === "password") {
-      setPassword(value); // Handle password separately
-    } else {
-      setNewUser((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
+    setNewRoute((prev) => ({
+      ...prev,
+      [name]: { name: value },
+    }));
+  };
+
+  const handleSubStationChange = (index: number, value: string) => {
+    const updatedSubStations = [...newRoute.subStations];
+    updatedSubStations[index] = { name: value };
+    setNewRoute((prev) => ({
+      ...prev,
+      subStations: updatedSubStations,
+    }));
+  };
+
+  const addSubStation = () => {
+    setNewRoute((prev) => ({
+      ...prev,
+      subStations: [...prev.subStations, { name: "" }],
+    }));
+  };
+
+  const removeSubStation = (index: number) => {
+    setNewRoute((prev) => ({
+      ...prev,
+      subStations: prev.subStations.filter((_, i) => i !== index),
+    }));
   };
 
   const handleEmployeeSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const userData: {
-      username: string;
-      firstname: string;
-      email: string;
-      isAdmin: string;
-      password?: string; // Optional password
-    } = { ...newUser };
 
-    if (!editingUserId && password) {
-      userData.password = password; // Add password only for new employee
-    }
-    if (editingUserId) {
+    if (editingRouteId) {
       // Update employee
-      await dispatch(updateUser(editingUserId, newUser));
+      await dispatch(updateRoute(editingRouteId, newRoute));
     } else {
       // Add new employee
-      await dispatch(createUser(userData));
+      await dispatch(createRoute(newRoute));
     }
-    await dispatch(fetchUsers());
+    await dispatch(fetchRoutes());
     handleCloseModal();
   };
 
-  const handleOpenModal = (user: any = null) => {
-    if (user) {
-      setEditingUserId(user._id); // Use appropriate ID field
-      setNewUser({
-        username: user.username,
-        firstname: user.firstname,
-        email: user.email,
-        isAdmin: user.isAdmin,
+  const handleOpenModal = (route: any = null) => {
+    if (route) {
+      setEditingRouteId(route._id);
+      setNewRoute({
+        startPoint: route.startPoint || { name: "" },
+        endDestination: route.endDestination || { name: "" },
+        subStations: route.subStations || [{ name: "" }],
       });
     } else {
-      setEditingUserId(null);
-      setNewUser({
-        username: "",
-        firstname: "",
-        email: "",
-        isAdmin: "",
+      setEditingRouteId(null);
+      setNewRoute({
+        startPoint: { name: "" },
+        endDestination: { name: "" },
+        subStations: [{ name: "" }],
       });
     }
     setIsModalOpen(true);
@@ -96,35 +100,33 @@ const Users = () => {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setEditingUserId(null);
-    setNewUser({
-      username: "",
-      firstname: "",
-      email: "",
-      isAdmin: "",
+    setEditingRouteId(null);
+    setNewRoute({
+      startPoint: { name: "" },
+      endDestination: { name: "" },
+      subStations: [{ name: "" }],
     });
-    setPassword("");
   };
 
   const handleDelete = async (id: string) => {
     const isConfirmed = window.confirm(
-      "Are you sure you want to delete this user?"
+      "Are you sure you want to delete this route?"
     );
     if (isConfirmed) {
-      await dispatch(deleteUser(id));
+      await dispatch(deleteRoute(id));
     }
-    dispatch(fetchUsers());
+    dispatch(fetchRoutes());
   };
 
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold">Users</h2>
+        <h2 className="text-2xl font-bold">Routes</h2>
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           onClick={() => handleOpenModal()}
         >
-          New User
+          New Route
         </button>
       </div>
 
@@ -140,32 +142,36 @@ const Users = () => {
               <table className="min-w-full bg-white">
                 <thead className="bg-[#F5F5F5]">
                   <tr className="text-xs text-[#888888] font-semibold">
-                    <th className="py-3 px-4 text-left">User Name</th>
-                    <th className="py-3 px-4 text-left">Name</th>
-                    <th className="py-3 px-4 text-left pr-12">Email</th>
-                    <th className="py-3 px-4 text-left pr-12">Role</th>
+                    <th className="py-3 px-4 text-left">Start Point</th>
+                    <th className="py-3 px-4 text-left pr-12">
+                      End Destination
+                    </th>
+                    <th className="py-3 px-4 text-left pr-12">Sub Stations</th>
                     <th className="py-3 px-4 text-left pr-12">Actions</th>
                   </tr>
                 </thead>
-                {users.length > 0 ? (
+                {routes.length > 0 ? (
                   <tbody>
-                    {users.map((item: any, index: any) => (
+                    {routes.map((item: any, index: any) => (
                       <tr
                         key={index}
                         className="text-sm text-[#323232] font-medium cursor-default"
                       >
                         <td className="py-2 px-4 flex items-center gap-4">
                           <div className="text-[15px] font-medium">
-                            {item.username}
+                            {item.startPoint.name}
                           </div>
                         </td>
                         <td className="py-2 px-4 text-left">
-                          {item.firstname}
+                          {item.endDestination.name}
                         </td>
-                        <td className="py-2 px-4 text-left">{item.email}</td>
+
                         <td className="py-2 px-4 text-left">
-                          {item.isAdmin ? "Admin" : "Client"}
+                          {item.subStations.map(
+                            (station: any) => station.name + ", "
+                          )}
                         </td>
+
                         <td className="py-2 px-4 text-left">
                           <div className="flex items-center gap-5">
                             <FaRegEdit
@@ -207,82 +213,90 @@ const Users = () => {
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-12 rounded shadow-lg">
             <h2 className="text-xl font-bold mb-4">
-              {editingUserId ? "Update Employee" : "Add New Employee"}
+              {editingRouteId ? "Update Employee" : "Add New Employee"}
             </h2>
             <form onSubmit={handleEmployeeSubmit}>
               <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2">
-                  Username
+                  Start Point
                 </label>
                 <input
                   type="text"
-                  name="username"
-                  value={newUser.username}
+                  name="startPoint"
+                  value={newRoute.startPoint.name}
                   onChange={handleChange}
                   className="shadow appearance-none border rounded w-[400px] py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  placeholder="Username"
+                  placeholder="Start Point"
                   required
                 />
               </div>
               <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2">
-                  Name
+                  End Destination
                 </label>
                 <input
                   type="text"
-                  name="firstname"
-                  value={newUser.firstname}
+                  name="endDestination"
+                  value={newRoute.endDestination.name}
                   onChange={handleChange}
                   className="shadow appearance-none border rounded w-[400px] py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  placeholder="First Name"
+                  placeholder="End Destination"
                   required
                 />
               </div>
 
+              {/* <div className="mb-4">
+                <div className="flex items-center justify-between">
+                  <label className="block text-gray-700 text-sm font-bold mb-2">
+                    Sub Stations
+                  </label>
+                  <FaCirclePlus
+                    size={20}
+                    color="green"
+                    className="cursor-pointer"
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <input
+                    type="text"
+                    name="subStations"
+                    value={newRoute.subStations}
+                    onChange={handleChange}
+                    className="shadow appearance-none border rounded w-[300px] py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    placeholder="Add a Sub-Station"
+                  />
+                  <RiDeleteBin6Line
+                    size={24}
+                    //   onClick={() => handleDelete(item._id)}
+                    className="cursor-pointer text-red-500 hover:text-red-600"
+                  />
+                </div>
+              </div> */}
+
               <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                  Email
-                </label>
-                <input
-                  type="text"
-                  name="email"
-                  value={newUser.email}
-                  onChange={handleChange}
-                  className="shadow appearance-none border rounded w-[400px] py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  placeholder="Email"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                  Role
-                </label>
-                <select
-                  name="isAdmin"
-                  value={newUser.isAdmin}
-                  onChange={handleChange}
-                  className="shadow appearance-none border rounded w-[400px] py-2 px-3 bg-white text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  required
-                >
-                  <option value="" disabled>
-                    Select the role
-                  </option>
-                  <option value={"true"}>Admin</option>
-                  <option value="false">Client</option>
-                </select>
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  name="password"
-                  value={password}
-                  onChange={handleChange}
-                  className="shadow appearance-none border rounded w-[400px] py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  placeholder="Password"
-                  required={!editingUserId}
-                  disabled={!!editingUserId}
+                <label>Sub Stations</label>
+                {newRoute.subStations.map((subStation, index) => (
+                  <div key={index} className="flex items-center mb-2">
+                    <input
+                      type="text"
+                      value={subStation.name}
+                      onChange={(e) =>
+                        handleSubStationChange(index, e.target.value)
+                      }
+                      className="border px-2 py-1"
+                    />
+                    <RiDeleteBin6Line
+                      size={20}
+                      className="ml-2 text-red-500 cursor-pointer"
+                      onClick={() => removeSubStation(index)}
+                    />
+                  </div>
+                ))}
+                <FaCirclePlus
+                  size={20}
+                  color="green"
+                  className="cursor-pointer"
+                  onClick={addSubStation}
                 />
               </div>
 
@@ -298,7 +312,7 @@ const Users = () => {
                   type="submit"
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 >
-                  {editingUserId ? "Update User" : "Add User"}
+                  {editingRouteId ? "Update Route" : "Add Route"}
                 </button>
               </div>
               {/* {error && <span>{emplo}</span>} */}
@@ -310,4 +324,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default Route;
