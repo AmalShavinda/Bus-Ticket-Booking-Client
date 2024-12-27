@@ -6,6 +6,7 @@ import busesReducer from "./Buses/BusesReducer";
 import usersReducer from "./Users/UserReducer";
 import bookingsReducer from "./Bookings/BookingReducer";
 import routesReducer from "./Route/RouteReducer";
+import tripsReducer from "./Trips/TripsReducer";
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   users: usersReducer,
   bookings: bookingsReducer,
   routes: routesReducer,
+  trips: tripsReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

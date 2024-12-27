@@ -18,7 +18,6 @@ export const fetchUsers = () => {
   return async (dispatch: Dispatch<UsersActionTypes>) => {
     dispatch({ type: FETCH_USERS_REQUEST });
     const token = Cookies.get("access_token");
-    console.log("Access Token:", token);
     if (!token) {
       dispatch({
         type: FETCH_USERS_FAILURE,

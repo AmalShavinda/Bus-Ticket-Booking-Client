@@ -30,8 +30,6 @@ const useBooking = () => {
     dispatch(fetchSeatsForTrip(seats.data.tripId));
   }, [dispatch]);
 
-  console.log(searchedBuses);
-
   const removeSeconds = (timeStr?: string | null): string => {
     if (!timeStr) {
       return "";
@@ -54,7 +52,6 @@ const useBooking = () => {
         `/searchedbuses/startpoint/${startPoint}/destination/${destination}/date/${date}`
       );
     } catch (error) {
-      console.error("Error fetching searched buses:", error);
       alert("Failed to fetch buses. Please try again.");
     }
   };

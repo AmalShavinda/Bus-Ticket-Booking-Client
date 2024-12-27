@@ -43,8 +43,6 @@ const Buses = () => {
     dispatch(fetchConductors());
   }, [dispatch]);
 
-  console.log(buses);
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {

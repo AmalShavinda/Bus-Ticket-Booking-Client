@@ -21,7 +21,6 @@ const initialState: AuthState = {
       const user = Cookies.get("user_details");
       return user ? JSON.parse(user) : null;
     } catch (error) {
-      console.error("Error parsing user cookie:", error);
       return null;
     }
   })(),
