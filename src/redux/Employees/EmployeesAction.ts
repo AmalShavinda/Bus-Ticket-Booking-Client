@@ -24,7 +24,6 @@ export const fetchEmployees = () => {
   return async (dispatch: Dispatch<EmployeesActionTypes>) => {
     dispatch({ type: FETCH_EMPLOYEES_REQUEST });
     const token = Cookies.get("access_token");
-    console.log("Access Token:", token);
     if (!token) {
       dispatch({
         type: FETCH_EMPLOYEES_FAILURE,
@@ -142,7 +141,6 @@ export const fetchDrivers = () => {
   return async (dispatch: Dispatch<EmployeesActionTypes>) => {
     dispatch({ type: FETCH_DRIVERS_REQUEST });
     const token = Cookies.get("access_token");
-    console.log("Access Token:", token);
     if (!token) {
       dispatch({
         type: FETCH_DRIVERS_FAILURE,
@@ -176,7 +174,6 @@ export const fetchConductors = () => {
   return async (dispatch: Dispatch<EmployeesActionTypes>) => {
     dispatch({ type: FETCH_CONDUCTORS_REQUEST });
     const token = Cookies.get("access_token");
-    console.log("Access Token:", token);
     if (!token) {
       dispatch({
         type: FETCH_CONDUCTORS_FAILURE,

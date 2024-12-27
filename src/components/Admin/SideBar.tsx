@@ -54,6 +54,12 @@ const SideBar: React.FC<SideBarProps> = ({ setSelectedPage }) => {
       >
         Routes
       </button>
+      <button
+        onClick={() => setSelectedPage("trips")}
+        className="p-4 text-left hover:bg-gray-700 focus:outline-none"
+      >
+        Trips
+      </button>
       <div className="space-y-4 px-4 absolute bottom-8">
         <div className=" flex items-center gap-3">
           <FaUserCircle color="white" size={22} />

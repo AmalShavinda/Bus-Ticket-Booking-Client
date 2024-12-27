@@ -21,6 +21,10 @@ export const DELETE_BUSES_SUCCESS = "DELETE_BUSES_SUCCESS";
 export const DELETE_BUSES_FAILURE = "DELETE_BUSES_FAILURE";
 export const CLEAR_SEARCHED_BUSES = "CLEAR_SEARCHED_BUSES";
 export const CLEAR_SEATS_FOR_TRIP = "CLEAR_SEATS_FOR_TRIP";
+export const FETCH_BUSES_BY_ROUTE_REQUEST = "FETCh_BUSES_BY_ROUTE_REQUEST";
+export const FETCH_BUSES_BY_ROUTE_SUCCESS = "FETCh_BUSES_BY_ROUTE_SUCCESS";
+export const FETCH_BUSES_BY_ROUTE_FAILURE = "FETCh_BUSES_BY_ROUTE_FAILURE";
+export const CLEAR_BUSES_BY_ROUTE = "CLEAR_BUSES_BY_ROUTE";
 
 interface BusesState {
   loading: boolean;
@@ -41,6 +45,7 @@ interface BusesState {
     };
   };
   buses: any[];
+  bussesByRoute: any[];
   postSuccess: boolean;
 }
 
@@ -63,6 +68,7 @@ const initialState: BusesState = {
     },
   },
   buses: [],
+  bussesByRoute: [],
   postSuccess: false,
 };
 
@@ -168,6 +174,24 @@ interface DeleteBusesFailureAction {
   payload: string;
 }
 
+interface FetchBusesByRouteRequestAction {
+  type: typeof FETCH_BUSES_BY_ROUTE_REQUEST;
+}
+
+interface FetchBusesByRouteSuccessAction {
+  type: typeof FETCH_BUSES_BY_ROUTE_SUCCESS;
+  payload: any[];
+}
+
+interface FetchBusesByRouteFailureAction {
+  type: typeof FETCH_BUSES_BY_ROUTE_FAILURE;
+  payload: string;
+}
+
+interface ClearBusesByRoute {
+  type: typeof CLEAR_BUSES_BY_ROUTE;
+}
+
 export type BusesActionTypes =
   | FetchSearchedBusesRequestAction
   | FetchSearchedBusesSuccessAction
@@ -188,7 +212,11 @@ export type BusesActionTypes =
   | AddBusesFailureAction
   | DeleteBusesRequestAction
   | DeleteBusesSuccessAction
-  | DeleteBusesFailureAction;
+  | DeleteBusesFailureAction
+  | FetchBusesByRouteRequestAction
+  | FetchBusesByRouteSuccessAction
+  | FetchBusesByRouteFailureAction
+  | ClearBusesByRoute;
 
 const busesReducer = (
   state = initialState,
@@ -322,6 +350,27 @@ const busesReducer = (
         ...state,
         loading: false,
         error: action.payload,
+      };
+
+    case FETCH_BUSES_BY_ROUTE_REQUEST:
+      return { ...state, loading: true };
+    case FETCH_BUSES_BY_ROUTE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        bussesByRoute: action.payload,
+      };
+    case FETCH_BUSES_BY_ROUTE_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+
+    case CLEAR_BUSES_BY_ROUTE:
+      return {
+        ...state,
+        bussesByRoute: [],
       };
 
     default:

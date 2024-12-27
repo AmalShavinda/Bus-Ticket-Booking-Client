@@ -24,9 +24,6 @@ export const login = (credentials: { username: string; password: string }) => {
         }
       );
 
-      // Debugging: Log response
-      console.log("Login Response:", response.data);
-
       // Destructure the response
       const { token, details } = response.data;
 
@@ -44,7 +41,6 @@ export const login = (credentials: { username: string; password: string }) => {
     } catch (error) {
       // Handle errors
       if (axios.isAxiosError(error)) {
-        console.error("Axios Error:", error.response?.data);
 
         const errorMessage =
           error.response?.data?.message || "Failed to login. Please try again.";

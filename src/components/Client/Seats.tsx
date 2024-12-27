@@ -55,9 +55,6 @@ const Seats = () => {
     handleBookingData();
   }, [dispatch, selectedSeats, price]);
 
-  console.log(seats);
-  console.log("Booking Data ", bookingData);
-
   const totalSeats = seats?.data?.seats || [];
   const backSeats = totalSeats.slice(-6); // Last 6 seats are the back row
   const remainingSeats = totalSeats.slice(0, totalSeats.length - 6); // Remove last 6 seats

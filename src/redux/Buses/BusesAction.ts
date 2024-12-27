@@ -5,6 +5,7 @@ import {
   ADD_BUSES_REQUEST,
   ADD_BUSES_SUCCESS,
   BusesActionTypes,
+  CLEAR_BUSES_BY_ROUTE,
   CLEAR_SEARCHED_BUSES,
   CLEAR_SEATS_FOR_TRIP,
   DELETE_BUSES_FAILURE,
@@ -13,6 +14,9 @@ import {
   FETCH_ALL_BUSES_FAILURE,
   FETCH_ALL_BUSES_REQUEST,
   FETCH_ALL_BUSES_SUCCESS,
+  FETCH_BUSES_BY_ROUTE_FAILURE,
+  FETCH_BUSES_BY_ROUTE_REQUEST,
+  FETCH_BUSES_BY_ROUTE_SUCCESS,
   FETCH_SEARCHED_BUSES_FAILURE,
   FETCH_SEARCHED_BUSES_REQUEST,
   FETCH_SEARCHED_BUSES_SUCCESS,
@@ -33,7 +37,6 @@ export const fetchSearchedBuses = (
   return async (dispatch: Dispatch<BusesActionTypes>) => {
     dispatch({ type: FETCH_SEARCHED_BUSES_REQUEST });
     const token = Cookies.get("access_token");
-    console.log("Access Token:", token);
     if (!token) {
       dispatch({
         type: FETCH_SEARCHED_BUSES_FAILURE,
@@ -102,7 +105,6 @@ export const fetchSeatsForTrip = (tripId: string) => {
   return async (dispatch: Dispatch<BusesActionTypes>) => {
     dispatch({ type: FETCH_SEATS_FOR_TRIP_REQUEST });
     const token = Cookies.get("access_token");
-    console.log("Access Token:", token);
     if (!token) {
       dispatch({
         type: FETCH_SEATS_FOR_TRIP_FAILURE,
@@ -254,3 +256,40 @@ export const deleteBuses =
       dispatch({ type: DELETE_BUSES_FAILURE, payload: error.message });
     }
   };
+
+export const fetchBusesByRoute = (routeId: string) => {
+  return async (dispatch: Dispatch<BusesActionTypes>) => {
+    dispatch({ type: FETCH_BUSES_BY_ROUTE_REQUEST });
+    const token = Cookies.get("access_token");
+    if (!token) {
+      dispatch({
+        type: FETCH_BUSES_BY_ROUTE_FAILURE,
+        payload: "Access token not found",
+      });
+      return;
+    }
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/buses/routeId?routeId=${routeId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      dispatch({
+        type: FETCH_BUSES_BY_ROUTE_SUCCESS,
+        payload: response.data,
+      });
+    } catch (error: any) {
+      dispatch({
+        type: FETCH_BUSES_BY_ROUTE_FAILURE,
+        payload: error.message,
+      });
+    }
+  };
+};
+
+export const clearBusesByRoute = (): BusesActionTypes => ({
+  type: CLEAR_BUSES_BY_ROUTE,
+});
