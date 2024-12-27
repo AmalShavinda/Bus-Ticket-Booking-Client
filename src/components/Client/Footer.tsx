@@ -80,7 +80,7 @@ const Footer = () => {
         </div>
         <div className="bg-black px-10 py-5">
           <p className="text-xs text-white font-medium max-sm:text-[10px] max-sm:text-center">
-            Powered by Sri Lankan railway department.
+            Powered by Sri Lankan transport service.
           </p>
         </div>
       </div>

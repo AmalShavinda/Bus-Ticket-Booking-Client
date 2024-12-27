@@ -2,6 +2,10 @@ import { useState } from "react";
 import SideBar from "../../../components/Admin/SideBar";
 import Users from "../../../components/Admin/Users";
 import Employees from "../../../components/Admin/Employees";
+import Buses from "../../../components/Admin/Buses";
+import Bookings from "../../../components/Admin/Bookings";
+import Route from "../../../components/Admin/Route";
+import Trips from "../../../components/Admin/Trips";
 
 const AdminDashBoard = () => {
   const [selectedPage, setSelectedPage] = useState("users");
@@ -12,6 +16,14 @@ const AdminDashBoard = () => {
         return <Users />;
       case "employees":
         return <Employees />;
+      case "buses":
+        return <Buses />;
+      case "bookings":
+        return <Bookings />;
+      case "routes":
+        return <Route />;
+      case "trips":
+        return <Trips />;
     }
   };
 
