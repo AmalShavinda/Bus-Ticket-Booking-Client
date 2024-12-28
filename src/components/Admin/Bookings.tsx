@@ -81,7 +81,7 @@ const Bookings = () => {
                         <td className="py-2 px-4 text-left">
                           Rs. {item.paymentDetails?.amount}.00
                         </td>
-                        <td className="py-2 px-4 text-left">{item.username}</td>
+                        <td className="py-2 px-4 text-left">{item.userId?.firstname}</td>
                         <td className="py-2 px-4 text-left">
                           {item.tripDate.split("T")[0]}
                         </td>
