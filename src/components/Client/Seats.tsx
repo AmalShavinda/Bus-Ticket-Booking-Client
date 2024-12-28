@@ -11,6 +11,7 @@ import { useParams } from "react-router-dom";
 
 const Seats = () => {
   const {
+    user,
     dispatch,
     seats,
     selectedSeats,
@@ -28,7 +29,7 @@ const Seats = () => {
     busId: "",
     routeId: "",
     tripId: "",
-    username: "",
+    userId: "",
     seats: {},
     tripDate: "",
     paymentDetails: {
@@ -99,7 +100,7 @@ const Seats = () => {
       busId: seats.data.busId,
       routeId: seats.data.routeId,
       tripId: seats.data.tripId,
-      username: "shavinda",
+      userId: user._id,
       seats: selectedSeats,
       tripDate: seats.data.tripDate,
       paymentDetails: {
@@ -109,6 +110,8 @@ const Seats = () => {
       },
     });
   };
+
+  console.log(user)
 
   const handlebooking = async () => {
     await dispatch(addSeatbooking(bookingData));
@@ -308,10 +311,10 @@ const Seats = () => {
                     </p>
                     <input
                       type="text"
-                      name=""
-                      id=""
+                      name="cardNumber"
                       className="px-3 py-2 text-sm font-medium border rounded-md w-full mt-2"
                       placeholder="Card Number"
+                      required
                     />
                   </div>
                   <div className="flex items-center gap-6">
@@ -325,6 +328,7 @@ const Seats = () => {
                         id=""
                         className="px-3 py-2 text-sm font-medium border rounded-md w-40 mt-2 uppercase"
                         placeholder="Expire Date"
+                        required
                       />
                     </div>
                     <div className="mt-3">
@@ -335,6 +339,7 @@ const Seats = () => {
                         id=""
                         className="px-3 py-2 text-sm font-medium border rounded-md w-28 mt-2 uppercase"
                         placeholder="CVV"
+                        required
                       />
                     </div>
                   </div>

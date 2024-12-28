@@ -6,8 +6,11 @@ const AboutUs = () => {
       <h1 className="text-center text-white text-3xl font-semibold uppercase">
         About Us
       </h1>
-      {aboutUs.map((item) => (
-        <div className="flex items-start justify-center gap-16 mt-10">
+      {aboutUs.map((item, index) => (
+        <div
+          key={index}
+          className="flex items-start justify-center gap-16 mt-10"
+        >
           <div className="space-y-3 w-[400px]">
             <p className="text-sm text-justify text-white font-medium">
               {item.topic1}

@@ -17,6 +17,7 @@ const useBooking = () => {
   const dispatch: AppDispatch = useDispatch();
   const { searchedBuses } = useSelector((state: RootState) => state.buses);
   const { seats } = useSelector((state: RootState) => state.buses);
+  const { user } = useSelector((state: RootState) => state.auth);
   const navigate = useNavigate();
   const [startPoint, setStartPoint] = useState("");
   const [destination, setDestination] = useState("");
@@ -82,6 +83,7 @@ const useBooking = () => {
   };
 
   return {
+    user,
     dispatch,
     startPoint,
     setStartPoint,
