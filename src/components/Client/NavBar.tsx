@@ -31,7 +31,7 @@ const NavBar = () => {
           className="text-white flex items-center gap-2 text-lg uppercase font-bold cursor-pointer"
           onClick={() => handleNavigate("/")}
         >
-          NTS Booking
+          NTC Booking
         </div>
 
         {/* Navigation links */}
