@@ -213,7 +213,7 @@ const Buses = () => {
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-12 rounded shadow-lg">
             <h2 className="text-xl font-bold mb-4">
-              {editingBusId ? "Update Employee" : "Add New Employee"}
+              {editingBusId ? "Update Bus" : "Add New Bus"}
             </h2>
             <form onSubmit={handleEmployeeSubmit}>
               <div className="mb-4">

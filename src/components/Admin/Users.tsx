@@ -207,7 +207,7 @@ const Users = () => {
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-12 rounded shadow-lg">
             <h2 className="text-xl font-bold mb-4">
-              {editingUserId ? "Update Employee" : "Add New Employee"}
+              {editingUserId ? "Update User" : "Add New User"}
             </h2>
             <form onSubmit={handleEmployeeSubmit}>
               <div className="mb-4">
